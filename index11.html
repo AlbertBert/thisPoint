@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>this绑定的优先级</title>
+  </head>
+  <body>
+    <script>
+      var objA = {
+        getName: function(name) {
+          this.name = name;
+        }
+      };
+      var objB = {};
+      objA.getName('zhang');
+      console.log(objA.name);            // zhang
+      objA.getName.call(objB, 'wang');
+      console.log(objB.name)             // wang
+      var objC = new objA.getName('li')
+      console.log(objC.name);              // li
+      console.log(objA.name);            // zhang
+    </script>
+  </body>
+</html>
