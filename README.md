@@ -269,53 +269,53 @@ new绑定和隐式绑定的优先级谁更高可以同下面这里例子说明�
 ### 几种特殊情况
 * 显式绑定的对象为null或者undefined，此时这些值会忽略，直接使用默认规则，也即是this会被绑定到全局对象或者undefined(严格模式下)
 
-    var objA = {
-        getName: function(name) {
-          console.log(this);              // window
-          this.name = name;
-        }
-    };
-    var objB = {};
-    objA.getName.call(null, 'zhang');
-    console.log(window.name);           // zhang 
+        var objA = {
+            getName: function(name) {
+              console.log(this);              // window
+              this.name = name;
+            }
+        };
+        var objB = {};
+        objA.getName.call(null, 'zhang');
+        console.log(window.name);           // zhang 
     
 上面的例子中，this就绑定到了window对象上
 * 间接引用
 当函数被赋值到另一个变量时，调用该复制变量(函数)，应用默认绑定规则
 
-    var a = 0;
-    var objA = {
-        a: 2,
-        printA: function() {
-          console.log(this.a);
-        }
-    };
-    var objB = {
-        a: 4
-    };
-    (objB.printA = objA.printA)();      // 0
+        var a = 0;
+        var objA = {
+            a: 2,
+            printA: function() {
+              console.log(this.a);
+            }
+        };
+        var objB = {
+            a: 4
+        };
+        (objB.printA = objA.printA)();      // 0
 
 赋值表达式objB.printA = objA.printA的返回值是目标函数的引用。因此调用的是printA函数，所以this使用默认规则，因此this.a输出的是全局变量a
 
 * 箭头函数
 箭头函数内的this和它的上一层作用域this绑定的对象一致。也就是说箭头函数内this和谁调用该该箭头函数无关。
 
-    var name = 'zhang';
-      function printA() {
-        console.log(this);           // objA
-        return () => {
-          console.log(this);         // objA
-          console.log(this.name);    
+        var name = 'zhang';
+          function printA() {
+            console.log(this);           // objA
+            return () => {
+              console.log(this);         // objA
+              console.log(this.name);    
+            }
         }
-    }
-    var objA = {
-        name: 'wang'
-    };
-    var objB = {
-        name: 'yang'
-    }
-    var f = printA.call(objA);
-    f.call(objB);                    // wang
+        var objA = {
+            name: 'wang'
+        };
+        var objB = {
+            name: 'yang'
+        }
+        var f = printA.call(objA);
+        f.call(objB);                    // wang
 
 上述代码表明箭头函数内部的this和其上一层作用域this完全一致。
 
