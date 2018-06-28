@@ -182,11 +182,11 @@ bind和call、apply还有一个区别在于一旦用bind绑定了this，之后th
 * 返回这个新对象
 
 
-    function Person(name) {
-        this.name = name;
-    }
-    var wang = new Person('wang');
-    console.log(wang.name);          // wang
+        function Person(name) {
+            this.name = name;
+        }
+        var wang = new Person('wang');
+        console.log(wang.name);          // wang
 
 
 现在说一下这四种情况的优先级
