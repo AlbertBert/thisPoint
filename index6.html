@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>this的隐式绑定</title>
+  </head>
+  <body>
+    <script>
+      var objA = {
+        a: 2,
+        objB: {
+          a: 4,
+          objC: {
+            a: 8,
+            printA: function() {
+              console.log(this);     // object: {a: 2, printA: ƒ}
+              console.log(this.a);   // 2
+            }
+          }
+        }
+      }
+      objA.objB.objC.printA();
+    </script>
+  </body>
+</html>

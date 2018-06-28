@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>this绑定的默认规则</title>
+  </head>
+  <body>
+    <script>
+      function printA() {
+        b = 3;
+        console.log(this);      // Window
+        console.log(this.a);    // 2
+      }
+      var a = 2;
+      (function() {
+        'use strict';
+        console.log(this);      // undefined
+        printA();
+      })()
+    </script>
+  </body>
+</html>

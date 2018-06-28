@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>this的隐式绑定</title>
+  </head>
+  <body>
+    <script>
+      var objA = {
+        a: 2,
+        add: function(n1, n2) {
+          console.log(this.a + n1 + n2);
+        }
+      }
+      var objB = {
+        a: 4
+      }
+      objA.add(1, 3);                  // 6
+      objA.add.call(objB, 1, 3);       // 8
+      objA.add.apply(objB, [1, 3]);    // 8
+    </script>
+  </body>
+</html>

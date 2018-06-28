@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>this的隐式绑定</title>
+  </head>
+  <body>
+    <script>
+      function Person(name) {
+        this.name = name;
+      }
+      var wang = new Person('wang');
+      console.log(wang.name);          // wang
+    </script>
+  </body>
+</html>
