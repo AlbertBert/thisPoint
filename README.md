@@ -192,6 +192,27 @@ bind和call、apply还有一个区别在于一旦用bind绑定了this，之后th
 现在说一下这四种情况的优先级
 显然，默认绑定的优先级是最低的，在其他三种情况都不适用的情况才会去使用默认绑定。
 
+显式绑定和隐式绑定相比，明显显式绑定的优先级更高。因为显式绑定可以强制改变this的绑定对象。而隐式绑定则只能将this绑定到函数调用时的上下文对象。
+
+new绑定和隐式绑定的优先级谁更高可以同下面这里例子说明。
+
+    var objA = {
+        getName: function(name) {
+          this.name = name;
+        }
+      };
+    var objB = {};
+    objA.getName('zhang');
+    console.log(objA.name);            // zhang
+    objA.getName.call(objB, 'wang');
+    console.log(objB.name)             // wang
+    var objC = new objA.getName('li')
+    console.log(objC.name);              // li
+    console.log(objA.name);            // zhang
+    
+可以看到，通过隐式绑定后，objA的name属性变成了zhang，而通过new绑定后，objC.name变成了li，而objA的name没有变，说明this是绑定到新建的对象上的，因此new绑定的优先级更高。
+
+
 
 
 
