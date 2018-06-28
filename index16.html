@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>几种特殊情况</title>
+  </head>
+  <body>
+    <script>
+      var name = 'zhang';
+      function printA() {
+        console.log(this);           // objA
+        return () => {
+          console.log(this);         // objA
+          console.log(this.name);    
+        }
+      }
+      var objA = {
+        name: 'wang'
+      };
+      var objB = {
+        name: 'yang'
+      }
+      var f = printA.call(objA);
+      f.call(objB);                    // wang
+    </script>
+  </body>
+</html>

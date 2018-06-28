@@ -212,7 +212,115 @@ new绑定和隐式绑定的优先级谁更高可以同下面这里例子说明�
     
 可以看到，通过隐式绑定后，objA的name属性变成了zhang，而通过new绑定后，objC.name变成了li，而objA的name没有变，说明this是绑定到新建的对象上的，因此new绑定的优先级更高。
 
+下面在看一下显式绑定和new绑定谁的优先级更高。
 
+    var objA = {
+        getName: function(name) {
+          this.name = name;
+        }
+      };
+    var objB = {};
+    objA.getName('zhang');
+    console.log(objA.name);            // zhang
+    var getNameBind = objA.getName.bind(objB);
+    getNameBind('wang');
+    console.log(objB.name)             // wang
+    var objC = new getNameBind('li')
+    console.log(objC.name);            // li
+    console.log(objB.name);            // zhang
+
+我们之前说过，通过bind显式绑定后this的绑定对象是不会在改变的，但是这里却并非这样。可以看到bind将this绑定到了objB，但是通过new操作符之后，objB的name属性却没有变化，而objC的name属性变成了li，说明在new操作符讲this绑定到了新建的对象上，因此new绑定的优先级是高于显式绑定的。
+
+这里给一下自己实现的bind函数
+
+    Function.prototype.myBind = function(obj) {
+        // 保存调用bind的函数
+        var func = this;
+        // 获取执行bind函数时绑定的对象
+        var _this = obj;
+        // 获取执行bind函数时传入的部分参数
+        var args = Array.prototype.slice.call(arguments, 1);
+        var fBound = function() {
+          // 执行bind函数返回的参数时传入的参数
+          var bindArgs = Array.prototype.slice.call(arguments);
+          // 将参数合并一起传入要执行的函数
+          var mergeArgs = args.concat(bindArgs);
+          // 判断是否通过new操作符调用bind返回的函数，如果不是，this的绑定就不能变，
+          // 否则this就绑定到new操作符新建的对象
+          if (this instanceof fBound) {
+            _this = this;
+          }
+          // 通过apply调用返回相应的值
+          return func.apply(_this, mergeArgs);
+        }
+        fBound.prototype = this.prototype;
+        return fBound;
+    }
+    var getNameBind2 = objA.getName.myBind(objB);
+    getNameBind2('song');
+    console.log(objB.name);                  // song
+    var objD = new getNameBind2('hang')
+    console.log(objD.name);                  // hang
+
+
+因此，this的绑定规则的优先级是：new绑定 > 显式绑定 > 隐式绑定 > 默认绑定。因此在判断this的的时候，按照以上优先级的顺序依次判断。
+
+### 几种特殊情况
+* 显式绑定的对象为null或者undefined，此时这些值会忽略，直接使用默认规则，也即是this会被绑定到全局对象或者undefined(严格模式下)
+
+
+    var objA = {
+        getName: function(name) {
+          console.log(this);              // window
+          this.name = name;
+        }
+    };
+    var objB = {};
+    objA.getName.call(null, 'zhang');
+    console.log(window.name);           // zhang 
+    
+上面的例子中，this就绑定到了window对象上
+* 间接引用
+当函数被赋值到另一个变量时，调用该复制变量(函数)，应用默认绑定规则
+
+
+    var a = 0;
+    var objA = {
+        a: 2,
+        printA: function() {
+          console.log(this.a);
+        }
+    };
+    var objB = {
+        a: 4
+    };
+    (objB.printA = objA.printA)();      // 0
+赋值表达式objB.printA = objA.printA的返回值是目标函数的引用。因此调用的是printA函数，所以this使用默认规则，因此this.a输出的是全局变量a
+
+* 箭头函数
+箭头函数内的this和它的上一层作用域this绑定的对象一致。也就是说箭头函数内this和谁调用该该箭头函数无关。
+
+
+    var name = 'zhang';
+      function printA() {
+        console.log(this);           // objA
+        return () => {
+          console.log(this);         // objA
+          console.log(this.name);    
+        }
+    }
+    var objA = {
+        name: 'wang'
+    };
+    var objB = {
+        name: 'yang'
+    }
+    var f = printA.call(objA);
+    f.call(objB);                    // wang
+
+上述代码表明箭头函数内部的this和其上一层作用域this完全一致。
+
+以上就是我想说的关于this对象的内容，希望大家指正。
 
 
 

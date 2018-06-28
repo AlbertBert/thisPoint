@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>几种特殊情况</title>
+  </head>
+  <body>
+    <script>
+      var objA = {
+        getName: function(name) {
+          console.log(this);              // window
+          this.name = name;
+        }
+      };
+      var objB = {};
+      objA.getName.call(null, 'zhang');
+      console.log(window.name);           // zhang   
+    </script>
+  </body>
+</html>

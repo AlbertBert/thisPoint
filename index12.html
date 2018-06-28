@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>this绑定的优先级</title>
+  </head>
+  <body>
+    <script>
+      var objA = {
+        getName: function(name) {
+          this.name = name;
+        }
+      };
+      var objB = {};
+      objA.getName('zhang');
+      console.log(objA.name);            // zhang
+      var getNameBind = objA.getName.bind(objB);
+      getNameBind('wang');
+      console.log(objB.name)             // wang
+      var objC = new getNameBind('li')
+      console.log(objC.name);            // li
+      console.log(objB.name);            // zhang
+    </script>
+  </body>
+</html>

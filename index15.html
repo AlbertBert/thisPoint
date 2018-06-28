@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>几种特殊情况</title>
+  </head>
+  <body>
+    <script>
+      var a = 0;
+      var objA = {
+        a: 2,
+        printA: function() {
+          console.log(this.a);
+        }
+      };
+      var objB = {
+        a: 4
+      };
+      (objB.printA = objA.printA)();      // 0
+    </script>
+  </body>
+</html>

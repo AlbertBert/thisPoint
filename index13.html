@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>this绑定的优先级</title>
+  </head>
+  <body>
+    <script>
+      var objA = {
+        getName: function(name) {
+          this.name = name;
+        }
+      };
+      var objB = {};
+
+      Function.prototype.myBind = function(obj) {
+        // 保存调用bind的函数
+        var func = this;
+        // 获取执行bind函数时绑定的对象
+        var _this = obj;
+        // 获取执行bind函数时传入的部分参数
+        var args = Array.prototype.slice.call(arguments, 1);
+        var fBound = function() {
+          // 执行bind函数返回的参数时传入的参数
+          var bindArgs = Array.prototype.slice.call(arguments);
+          // 将参数合并一起传入要执行的函数
+          var mergeArgs = args.concat(bindArgs);
+          // 判断是否通过new操作符调用bind返回的函数，如果不是，this的绑定就不能变，
+          // 否则this就绑定到new操作符新建的对象
+          if (this instanceof fBound) {
+            _this = this;
+          }
+          // 通过apply调用返回相应的值
+          return func.apply(_this, mergeArgs);
+        }
+        fBound.prototype = this.prototype;
+        return fBound;
+      }
+      var getNameBind2 = objA.getName.myBind(objB);
+      getNameBind2('song');
+      console.log(objB.name);                  // song
+      var objD = new getNameBind2('hang')
+      console.log(objD.name);                  // hang
+    </script>
+  </body>
+</html>
